@@ -24,7 +24,8 @@ The goals / steps of this project are the following:
 [image5]: ./warped_straight_lines.png "Warp Example"
 [image6]: ./color_fit_lines.png "Fit Visual"
 [image7]: ./output_images/test1.jpg "Output"
-[video1]: ./project_video_processed.mp4 "Video"
+[video1]: ./project_video_processed.mp4 "Project Video"
+[video2]: ./challenge_video_processed.mp4 "Challenge Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -64,10 +65,14 @@ I instantiate the class CameraCalibration and call the method `camera.undistort`
 
 In order to create a binary image, containing likely lane pixels I implemnted a method apply_threshold which does the following:
     - Converts an image in BGR color space to HLS and retrieve the S channel. This is needed because the S channel in HLS preserves pretty much of the shape given different lighting conditions.
-    - Apply Sobel X filter to L channel.
-    - Threshold X gradient on L channel (I used threshold values (20, 100)).
-    - Threshold S channel (I used the threshold values (140,255)).
+    - Apply Sobel X and Y filters to S and L channels.
+    - Threshold X and Y gradients on S and L channel (I used threshold values (50, 200)).
+    - Threshold H, L, S channels to identify white and yellow colors:
+        - yellow - H (0,85), L (120,255), S (75,255)
+        - white - H (20,255), L (170,255), S (0,80)
     - Combined binaries from thresholds which gives a pretty accurate lane lines.
+    
+The above values were tuned by using the ipywidgets. See the corresponding section in the notebook.
 
 The resulting image looks as follows:
 ![alt text][image4]
@@ -145,7 +150,8 @@ You can find the implementation in the method `process_single_image` in `P2.ipyn
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a link [video1](./project_video_processed.mp4)
+Here's a link on project video [video1](./project_video_processed.mp4)
+Here's a link on challenge video [video2](./challenge_video_processed.mp4)
 
 ---
 
@@ -153,19 +159,18 @@ Here's a link [video1](./project_video_processed.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-The pipeline for video processing differs a bit from the pipeline to process the single image. Here's the detailed description of the updated pipeline:
+The pipeline coded above consists of the following steps (you can review the results in 'project_video_processed.mp4' and 'challenge_video_processed.mp4'):
 
     - Preprocess image: undistort, apply color threshold and apply the perspective transform.
     - Find lane lines, by finding the grade 2 polynomial coefficients corresponding to the lane lines.
         - If it's the first frame, or after the number of unsuccessful frames, use histogram to find the starting position for sliding window to find the lane lines.
         - If the previous frame was successfully processed, use the averaged polynomial coefficients for several previous frames to look around these lines +- margin.
+            - Run sanity check and do the smoothing
+                - Sanity check: if the coefficients differ by the value .1, grab the previous coefficients, say that the lane lines were not found the way they should and work out this way.
+                - Smoothing: in order to smooth the lane lines on the video I was getting the new coefficients which are the result of the following summation: .95 old_coeff + .05 new_coeff
     - Calculate lane curvature and position of the car in relation to the center of the lane.
-    - Run the sanity check (check if the lane lines are roughly parallel and that the lane curvature is not different from previous frame).
-        - If the sanity is OK - we consider we found the lane lines successfully and fill in the bookkeeping data structure to use for drawing.
-        - If the sanity was not OK, we increment the number of unsuccessful frames and use the previous bookkeeping information to draw the lane line. If the number of unsuccessful frames equals to the number we set, we reset the search and start with histogram to find the starting positions of lane lines.
     - Draw the polygon occupying the area between the identified lane lines.
     - Combine the original image and the empty image with lane lines drawn.
-    - Write a text on the resulting image telling the info about lane curvature and distance from the center of the lane.
+    - Draw a text on the resulting image telling the info about lane curvature and distance from the center of the lane.
 
-My pipeline for the video processing does a good job on the main project video file. 
-However, if the lighting conditions are not good, it wouldn't work that well as there may be additional lines detected (like in challenge_video.mp4). In order to fix that, I need to consider changing the thresholding to better handle these conditions and also to do a better sanity check to make sure that lane lines found are fine (even measure distance between lane lines and make sure that it's OK for a lane).
+So, my pipeline for the video processing does a good job on the main project video file and does an average job on challenge video file. The thresholding technique can be improved to work better under different lighting conditions (it works well for most of the cases though). However, if the curvature of the lane line frequently changes on large values, it wouldn't work well as the sanity check combined with smooting technique will prevent it from drawing the accurate lane lines. In order to make a good progress with finding any lane lines, it's worth considering to use the machine learning techniques, e.g. semantic segmentation which may give the opportunity to actually build the robust solution to accurately find and smoothen the lane lines. I plan to work towards this in my spare time to actually get this up and running.
