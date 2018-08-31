@@ -104,7 +104,7 @@ Then I used the sliding windows technique to fir the lane lines with 2nd degree 
 See method `find_lane_pixels` in `P2.ipynb` for implementation details.
 The resulting image will look like this:
 
-![alt text][image5]
+![alt text][image6]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 First of all, as all the distances on the images are represented as pixels, I needed to implement the conversion from pixels to meters on both axes. We define that there's the following conversion ratios for `y` and `x` dimensions:
@@ -142,7 +142,7 @@ Let's implement the pipeline to process single image. It will contain the follow
 
 You can find the implementation in the method `process_single_image` in `P2.ipynb`.
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
@@ -150,8 +150,9 @@ You can find the implementation in the method `process_single_image` in `P2.ipyn
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a link on project video [video1](./project_video_processed.mp4)
-Here's a link on challenge video [video2](./challenge_video_processed.mp4)
+- Here's a link on project video [video1](./project_video_processed.mp4)
+
+- Here's a link on challenge video [video2](./challenge_video_processed.mp4)
 
 ---
 
