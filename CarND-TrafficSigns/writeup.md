@@ -19,7 +19,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/sample_image.jpeg "Example Image"
+[image1]: ./examples/sample_image.jpg "Example Image"
 [image2]: ./examples/dataset_visualized.jpeg "Histogram of Data Distribution"
 [image3]: ./examples/augmentation_rotated.jpeg "Rotation"
 [image4]: ./examples/do_not_enter.jpg "Do Not Enter"
