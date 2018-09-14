@@ -55,7 +55,7 @@ signs data set:
 
 #### 2. Include an exploratory visualization of the dataset.
 
-Here's how the image looks like:
+Here's how the small subset of test dataset looks like:
 
 ![alt_text][image1]
 
@@ -126,7 +126,8 @@ I used the following hyperparameters during the training:
 * Number of epochs: 50
 * Batch size: 128
 
-I experimented with different values for learning rate, keep_prob and number of epochs and ended up with the optimal numbers shown above.
+I experimented with different values for learning rate, keep_prob, batch_size and number of epochs and ended up with the optimal numbers shown above.
+
 As the future part of my work I plan to get rid of constant number of epochs and come up to early stopping which may help to save training time and get the best training experience.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
@@ -139,6 +140,7 @@ My final model results were:
 I have chosen an iterative approach based on the LeNet architecture.
 * First I ran the training on raw LeNet and got the validation set accuracy as 0.89-0.9.
 * The model was overfitting and in order to make the things better I did the following:
+** I was adding additional convolutional layers one by one to get a deeper model to generalize the traffic signs better. The initial LeNet architecture works with 2 convolutional layers, so I added one additonal 5x5 convolution first followed by the max pooling layer. That made the model to improve the validation set accuracy to about >0.93. 
 ** Got rid of all the pooling layers except for the last one and replaced them with 1x1 convolutions. This gave me a chance to preserve most of the data during the feed forward.
 ** Added batch normalization to speed up the learning and reduce the overfitting.
 ** I tried to go deeper (with 8 convolutions 5x5 followed by 1x1), which given me the validation accuracy around 0.985-0.987, but due to the workspace limitations I got rid of the last 2 convolutional layers and got the validation accuracy as 0.981-0.985.
