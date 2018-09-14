@@ -140,11 +140,11 @@ My final model results were:
 I have chosen an iterative approach based on the LeNet architecture.
 * First I ran the training on raw LeNet and got the validation set accuracy as 0.89-0.9.
 * The model was overfitting and in order to make the things better I did the following:
-** I was adding additional convolutional layers one by one to get a deeper model to generalize the traffic signs better. The initial LeNet architecture works with 2 convolutional layers, so I added one additonal 5x5 convolution first followed by the max pooling layer. That made the model to improve the validation set accuracy to about >0.93. 
-** Got rid of all the pooling layers except for the last one and replaced them with 1x1 convolutions. This gave me a chance to preserve most of the data during the feed forward.
-** Added batch normalization to speed up the learning and reduce the overfitting.
-** I tried to go deeper (with 8 convolutions 5x5 followed by 1x1), which given me the validation accuracy around 0.985-0.987, but due to the workspace limitations I got rid of the last 2 convolutional layers and got the validation accuracy as 0.981-0.985.
-** I added the dropout layers at the end of fully connected layers to reduce overfitting.
+ * I was adding additional convolutional layers one by one to get a deeper model to generalize the traffic signs better. The initial LeNet architecture works with 2 convolutional layers, so I added one additonal 5x5 convolution first followed by the max pooling layer. That made the model to improve the validation set accuracy to about >0.93. 
+ * Got rid of all the pooling layers except for the last one and replaced them with 1x1 convolutions. This gave me a chance to preserve most of the data during the feed forward.
+ * Added batch normalization to speed up the learning and reduce the overfitting.
+ * I tried to go deeper (with 8 convolutions 5x5 followed by 1x1), which given me the validation accuracy around 0.985-0.987, but due to the workspace limitations I got rid of the last 2 convolutional layers and got the validation accuracy as 0.981-0.985.
+ * I added the dropout layers at the end of fully connected layers to reduce overfitting.
 
 I also plan to look at Inception-based architectures, to get much better validation set accuracy.
  
