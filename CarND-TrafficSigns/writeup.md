@@ -90,16 +90,16 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x3 RGB image   							| 
-| Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x6 	|
+| Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x16 	|
 | Batch Normalization	|												|
 | RELU					|												|
-| Convolution 1x1     	| 1x1 stride, same padding, outputs 28x28x6 	|
+| Convolution 1x1     	| 1x1 stride, same padding, outputs 28x28x16 	|
 | Batch Normalization	|												|
 | RELU					|												|
-| Convolution 5x5     	| 1x1 stride, valid padding, outputs 24x24x16 	|
+| Convolution 5x5     	| 1x1 stride, valid padding, outputs 24x24x32 	|
 | Batch Normalization	|												|
 | RELU					|												|
-| Convolution 1x1     	| 1x1 stride, same padding, outputs 24x24x16 	|
+| Convolution 1x1     	| 1x1 stride, same padding, outputs 24x24x32 	|
 | Batch Normalization	|												|
 | RELU					|												|
 | Convolution 5x5     	| 1x1 stride, valid padding, outputs 20x20x32 	|
@@ -134,17 +134,36 @@ As the future part of my work I plan to get rid of constant number of epochs and
 
 My final model results were:
 * training set accuracy of 1.000
-* validation set accuracy of 0.982
-* test set accuracy of 0.968
+* validation set accuracy of 0.988
+* test set accuracy of 0.977
 
 I have chosen an iterative approach based on the LeNet architecture.
 * First I ran the training on raw LeNet and got the validation set accuracy as 0.89-0.9.
 * The model was overfitting and in order to make the things better I did the following:
- * I was adding additional convolutional layers one by one to get a deeper model to generalize the traffic signs better. The initial LeNet architecture works with 2 convolutional layers, so I added one additonal 5x5 convolution first followed by the max pooling layer. That made the model to improve the validation set accuracy to about >0.93. 
- * Got rid of all the pooling layers except for the last one and replaced them with 1x1 convolutions. This gave me a chance to preserve most of the data during the feed forward.
- * Added batch normalization to speed up the learning and reduce the overfitting.
- * I tried to go deeper (with 8 convolutions 5x5 followed by 1x1), which given me the validation accuracy around 0.985-0.987, but due to the workspace limitations I got rid of the last 2 convolutional layers and got the validation accuracy as 0.981-0.985.
- * I added the dropout layers at the end of fully connected layers to reduce overfitting.
+    * I was adding additional convolutional layers one by one to get a deeper model to generalize the traffic signs better. The initial LeNet architecture works with 2 convolutional layers, so I added one additonal 5x5 convolution first followed by the max pooling layer. That made the model to improve the validation set accuracy to about >0.93. 
+    * Got rid of all the pooling layers except for the last one and replaced them with 1x1 convolutions. This gave me a chance to preserve most of the data during the feed forward.
+    * Added batch normalization to speed up the learning and reduce the overfitting.
+    * I tried to go deeper (with 8 convolutions 5x5 followed by 1x1), which given me the validation accuracy around 0.985-0.987, but due to the workspace limitations I got rid of the last 2 convolutional layers and got the validation accuracy as 0.981-0.985.
+    * I added the dropout layers at the end of fully connected layers to reduce overfitting.
+* I was experimenting with learning rate. I used the following values: 0.0005, 0.001, 0.002. The learning rate of 0.002 made the model train faster at the beginning, but then it gets harder to get to the minimum, so it doesn't converge that well at the end. The learning rate of 0.0005 makes the learning slower, but it converges pretty good. The same is true for 0.001 which has been chosen because by using it the model can be trained using the least number of epochs.
+* Looking at the batch size, I tried the following sizes: 64, 128, 256.
+    * Having a small batch size implies a faster forward and backprop, however it introduces noise due to a small amount of data fed to the optimizer. The small batch size is good to be used if you have the memory restrictions.
+    * With a large batch size we are ending up with a bigger computational cost for a single operation, but the result of optimizer will have much less noise.
+    * Trying the batch size of 64 has given a smaller validation set accuracy than the batch sizes of 128 and 256 which produced almost identical training/validation accuracy. That's why I ended up with the size of 128 as it makes the learning experience a bit smoother given the same environment.
+
+When implementing the model it's very important to make sure that model neither underfits nor overfits. In my case, underfitting was never the case. However, I had plenty of overfitting.
+In order to deal with overfitting the following needs to be explored:
+* Build a more complex models
+* Use batch normalization
+* Use dropout
+
+The underfitting identifies that the train and validation accuracy are low and it may be caused by too complex model and a lack of training data. It can be solved in 2 ways:
+* Simplify the model
+* Augment the data
+
+One of the very important parts during training of the neural network is to choose the optimizer to use for training. 
+I tried SGD and Adam. By doing comparing the training experience with SGD and Adam, it's clear that SGD converges slower and gives a worse validation accuracy. On the other side, Adam adapts the lerning rate during the learning process which gives a smooth learning experience.
+This way, Adam was the optimizer of my choice.
 
 I also plan to look at Inception-based architectures, to get much better validation set accuracy.
  
