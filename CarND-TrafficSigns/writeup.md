@@ -19,16 +19,16 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/sample_image.jpeg "Example Image"
-[image2]: ./examples/dataset_visualized.jpeg "Histogram of Data Distribution"
-[image3]: ./examples/augmentation_rotated.jpeg "Rotation"
+[image1]: ./examples/sample_image.JPG "Example Image"
+[image2]: ./examples/dataset_visualized.JPG "Histogram of Data Distribution"
+[image3]: ./examples/augmentation_rotated.JPG "Rotation"
 [image4]: ./examples/do_not_enter.jpg "Do Not Enter"
 [image5]: ./examples/construction.jpg "Road Work"
 [image6]: ./examples/100kmh.jpg "Speed Limit 100 km/h"
 [image7]: ./examples/right_of_way.jpg "Right-of-way"
 [image8]: ./examples/turn_right.jpg "Turn right ahead"
-[image9]: ./examples/conv3_featuremap.jpeg "Conv3 feature map visualized"
-[image10]: ./examples/conv31_featuremap.jpeg "Conv31 feature map visualized"
+[image9]: ./examples/conv3_featuremap.JPG "Conv3 feature map visualized"
+[image10]: ./examples/conv31_featuremap.JPG "Conv31 feature map visualized"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
