@@ -17,12 +17,9 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image2]: ./examples/placeholder.png "Center Lane Driving"
+[image3]: ./examples/placeholder_small.png "Changes In the Validation Loss"
+[video1]: ./run1.mp4 "Autonomous driving"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -91,10 +88,22 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 #### 2. Final Model Architecture
 
 The final model architecture (model.py lines 59-106) consisted of a convolution neural network with the following layers and layer sizes:
-    * Cropping2D to crop the input image
-    * Lambda to do the normalization
-    * Conv2D with 5x5x24, stride 1, padding='SAME', batch normalization and ReLU activation function
-    * MaxPooling2D with pool size 2x2 and strides 2
+* Cropping2D to crop the input image
+* Lambda to do the normalization
+* Conv2D with 5x5x24, stride 1, padding='SAME', batch normalization and ReLU activation function
+* MaxPooling2D with pool size 2x2 and strides 2
+* Conv2D with 5x5x36, stride 1, padding='SAME', batch normalization and ReLU activation function
+* MaxPooling2D with pool size 2x2 and strides 2
+* Conv2D with 5x5x48, stride 1, padding='SAME', batch normalization and ReLU activation function
+* MaxPooling2D with pool size 2x2 and strides 2
+* Conv2D with 3x3x64, stride 1, padding='SAME', batch normalization and ReLU activation function
+* MaxPooling2D with pool size 2x2 and strides 2
+* Conv2D with 3x3x64, stride 1, padding='SAME', batch normalization and ReLU activation function
+* MaxPooling2D with pool size 2x2 and strides 2
+* Fully connected layer with 1164 neurons, batch normalization and ReLU activation function
+* Fully connected layer with 100 neurons, batch normalization and ReLU activation function
+* Fully connected layer with 50 neurons, batch normalization and ReLU activation function
+* Output layer with 1 neuron, no activation
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
@@ -106,23 +115,18 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded 2 laps on track one using center lane driving in opposite direction.
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+In order to reproduce the lane position recovery I used the images captured by the left and right cameras.
 
 After the collection process, I had about 18000 of data points. I then preprocessed this data by cropping and normalizing the data. As I was doing it on the go, it appeared to be not a good idea as it was making the epoch go longer.
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 3 as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 3 due to high computational cost of running the training on the GPU workspace. I used an adam optimizer so that manually training the learning rate wasn't necessary.
+
+The changes in the loss can be seen here:
+![alt_text][image3]
+
+Here's the link on the video showing the autonomous driving around the track:
+![alt_text][video1]
