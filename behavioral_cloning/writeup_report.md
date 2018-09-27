@@ -17,8 +17,9 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Center Lane Driving"
-[image3]: ./examples/placeholder_small.png "Changes In the Validation Loss"
+[image2]: ./examples/center.JPEG "Center Lane Driving (Central camera)"
+[image3]: ./examples/left.JPEG "Center Lane Driving (Left camera)"
+[image3]: ./examples/train_validation_loss.JPEG "Changes In the Validation Loss"
 [video1]: ./run1.mp4 "Autonomous driving"
 
 ## Rubric Points
