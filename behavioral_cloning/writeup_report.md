@@ -16,11 +16,9 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/center.jpg "Center Lane Driving (Central camera)"
-[image3]: ./examples/left.jpg "Center Lane Driving (Left camera)"
+[image1]: ./examples/center.jpg "Center Lane Driving (Central camera)"
+[image2]: ./examples/left.jpg "Center Lane Driving (Left camera)"
 [image3]: ./examples/train_validation_loss.JPG "Changes In the Validation Loss"
-[video1]: ./run1.mp4 "Autonomous driving"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -106,15 +104,14 @@ The final model architecture (model.py lines 59-106) consisted of a convolution 
 * Fully connected layer with 50 neurons, batch normalization and ReLU activation function
 * Output layer with 1 neuron, no activation
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
 
 #### 3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![alt text][image1]
+
+![alt_text][image2]
 
 I then recorded 2 laps on track one using center lane driving in opposite direction.
 
@@ -127,7 +124,6 @@ I finally randomly shuffled the data set and put 20% of the data into a validati
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 3 due to high computational cost of running the training on the GPU workspace. I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
 The changes in the loss can be seen here:
+
 ![alt_text][image3]
 
-Here's the link on the video showing the autonomous driving around the track:
-![alt_text][video1]
