@@ -4,12 +4,14 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 import cv2
 import csv
 
+# retrieve the samples (e.g. image file names, rotation angle)
 samples = []
 with open('./data/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
         samples.append(line)
 
+# split the samples to train and validation sets
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
@@ -19,6 +21,7 @@ import sklearn
 
 data_folder_name = './data/IMG/'
 
+# define the generator method which loads images in a batches
 def generator(samples, batch_size=32):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
@@ -34,7 +37,7 @@ def generator(samples, batch_size=32):
                 center_image = cv2.imread(center_name)
                 center_angle = float(batch_sample[3])
                 
-                correction = 0.8 # this is a parameter to tune
+                correction = 0.6 # this is a parameter to tune
                 left_angle = center_angle + correction
                 right_angle = center_angle - correction
                 
@@ -50,11 +53,16 @@ def generator(samples, batch_size=32):
             X_train = np.array(images)
             y_train = np.array(angles)
             yield sklearn.utils.shuffle(X_train, y_train)
-            
+
+# method which builds the actual model
+# in order to improve the pipeline, I would rather do all the data preprocessing separately and then feed the processed data to the network
 def build_model():
     model = Sequential()
+    # data pre-processing
     model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
     model.add(Lambda(lambda x: (x/127.5)-1.))
+    
+    # convolutions with maxpooling and batchnorm
     model.add(Conv2D(24, kernel_size=(5,5), strides=(1,1), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
@@ -75,25 +83,30 @@ def build_model():
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2,2), strides=(2,2)))
+    
+    # flatten and add fully connected layers
     model.add(Flatten())
     model.add(Dense(1164))
     model.add(BatchNormalization())
-    model.add(Dropout(0.25))
+   # model.add(Dropout(0.25))
     model.add(Activation('relu'))
     model.add(Dense(100))
     model.add(BatchNormalization())
-    model.add(Dropout(0.25))
+    #model.add(Dropout(0.25))
     model.add(Activation('relu'))
     model.add(Dense(50))
     model.add(BatchNormalization())
-    model.add(Dropout(0.25))
+    #model.add(Dropout(0.25))
     model.add(Activation('relu'))
     model.add(Dense(1))
     
+    # compile with Adam optimizer and mean squared error as the loss function
     model.compile(optimizer='adam', loss='mse')
     
     return model
-    
+
+# trains the model
+# defined 2 callbacks: early stopping and checkpoint to save the model if the validation loss has been improved
 def train_model(model, train_generator, validation_generator, epochs=3):
     early_stopping_callback = EarlyStopping(monitor='val_loss', patience=2)
     checkpoint_callback = ModelCheckpoint('best_model.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min')
@@ -109,7 +122,7 @@ validation_generator = generator(validation_samples, batch_size=32)
 
 model = build_model()
 
-train_model(model, train_generator, validation_generator, 2)
+train_model(model, train_generator, validation_generator, 3)
 
 model.save('model.h5')
 
